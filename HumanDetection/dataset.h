@@ -12,11 +12,6 @@
 #define NegSamListFile "NoPersonFromINRIAList.txt" 
 #define HardExampleListFile "HardExample_FromINRIA_NegList.txt"
 
-#define PosTestListFile "TestExample_FromINRIA_PosList.txt"
-#define NegTestListFile "TestExample_FromINRIA_NegList.txt"
-#define PosTestNO 1132  
-#define NegTestNO 4530 
-
 //是否进行训练,true表示重新训练，false表示读取xml文件中的SVM模型
 #define TRAIN false   
 //true:训练时，对96*160的INRIA正样本图片剪裁出中间的64*128大小人体

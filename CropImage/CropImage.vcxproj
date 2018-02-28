@@ -66,8 +66,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Program Files %28x86%29\opencv-3.1.0\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files %28x86%29\opencv-3.1.0\opencv\build\x64\vc14\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\ProgramFiles\OpenCV3_1_0\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\ProgramFiles\OpenCV3_1_0\opencv\build\x64\vc12\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\ProgramFiles\OpenCV3_1_0\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\ProgramFiles\OpenCV3_1_0\opencv\build\x64\vc12\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

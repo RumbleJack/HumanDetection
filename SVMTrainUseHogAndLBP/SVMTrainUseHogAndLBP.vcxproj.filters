@@ -15,16 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="my_svm.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="dataset.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="my_svm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LBP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LBP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

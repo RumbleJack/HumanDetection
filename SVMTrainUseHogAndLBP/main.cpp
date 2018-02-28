@@ -11,10 +11,10 @@ using namespace cv;
 
 #include "dataset.h" // 定义一些数据
 #include "my_svm.h"  // MySVM继承自CvSVM的类
+#include "LBP.h"
 
 int main()
 {
-	
 	//检测窗口(64,128),块尺寸(16,16),块步长(8,8),cell尺寸(8,8),直方图bin个数9
 	HOGDescriptor hog(Size(64, 128), Size(16, 16), Size(8, 8), Size(8, 8), 9);//HOG检测器，用来计算HOG描述子的
 	//HOG描述子的维数，由图片大小、检测窗口大小、块大小、细胞单元中直方图bin个数决定
@@ -56,6 +56,14 @@ int main()
 			// 实际上由于检测窗口和图像尺寸相等，不需要移动
 			hog.compute(src, descriptors, Size(8, 8));
 
+			// LBP描述子向量
+			vector<float> LBPdescriptors;
+			// 计算LBP描述子，检测窗口移动步长(8,8)
+			// 实际上由于检测窗口和图像尺寸相等，不需要移动
+			LBP(src, LBPdescriptors);
+			descriptors.insert(descriptors.begin(), LBPdescriptors.begin(), LBPdescriptors.end());
+
+
 			//处理第一个样本时初始化特征向量矩阵和类别矩阵
 			if (0 == num)
 			{
@@ -88,6 +96,13 @@ int main()
 			vector<float> descriptors;
 			//计算HOG描述子，检测窗口移动步长(8,8)
 			hog.compute(src, descriptors, Size(8, 8));
+			
+			// LBP描述子向量
+			vector<float> LBPdescriptors;
+			// 计算LBP描述子，检测窗口移动步长(8,8)
+			// 实际上由于检测窗口和图像尺寸相等，不需要移动
+			LBP(src, LBPdescriptors);
+			descriptors.insert(descriptors.begin(), LBPdescriptors.begin(), LBPdescriptors.end());
 
 			// 将HOG描述子复制到样本特征矩阵
 			for (int i = 0; i < DescriptorDim; i++){
@@ -114,6 +129,13 @@ int main()
 				//计算HOG描述子，检测窗口移动步长(8,8)
 				hog.compute(src, descriptors, Size(8, 8));
 
+				// LBP描述子向量
+				vector<float> LBPdescriptors;
+				// 计算LBP描述子，检测窗口移动步长(8,8)
+				// 实际上由于检测窗口和图像尺寸相等，不需要移动
+				LBP(src, LBPdescriptors);
+				descriptors.insert(descriptors.begin(), LBPdescriptors.begin(), LBPdescriptors.end());
+
 				//将HOG描述子复制到样本特征矩阵
 				for (int i = 0; i < DescriptorDim; i++){
 					sampleFeatureMat.at<float>(num + PosSamNO + NegSamNO, i) = descriptors[i];
@@ -123,23 +145,11 @@ int main()
 			}
 		}
 
-		// 输出样本的HOG特征向量矩阵到文件
-		/*	ofstream fout("SampleFeatureMat.txt");
-		for(int i=0; i<PosSamNO+NegSamNO; i++)
-		{
-		fout<<i<<endl;
-		for(int j=0; j<DescriptorDim; j++)
-		{	fout<<sampleFeatureMat.at<float>(i,j)<<"  ";
-
-		}
-		fout<<endl;
-		}*/
-
 		// 训练SVM分类器
 		// 迭代终止条件，当迭代满TermCriteriaCount次或误差小于FLT_EPSILON时停止迭代
 		CvTermCriteria criteria = cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, TermCriteriaCount, FLT_EPSILON);
 		// SVM参数：SVM类型为C_SVC；线性核函数；松弛因子C=0.01
-		CvSVMParams param(CvSVM::C_SVC, CvSVM::LINEAR, 0, 1, 0, 0.01, 0, 0, 0, criteria);
+		CvSVMParams param(CvSVM::C_SVC, CvSVM::LINEAR,0, 1, 0, 0.01, 0, 0, 0, criteria);
 		cout << "开始训练SVM分类器" << endl;
 		svm.train(sampleFeatureMat, sampleLabelMat, Mat(), Mat(), param);
 		cout << "训练完成" << endl;
@@ -150,7 +160,7 @@ int main()
 	}
 
 	//测试样本的特征向量矩阵
-	Mat testFeatureMat = Mat::zeros(1, 3780, CV_32FC1);
+	
 	ifstream finTestNeg(NegTestListFile, ios::in);
 	string testImgName;
 	int falseNegNum = 0;
@@ -170,6 +180,14 @@ int main()
 		//计算HOG描述子，检测窗口移动步长(8,8)
 		hog.compute(src, descriptors, Size(8, 8));
 
+		// LBP描述子向量
+		vector<float> LBPdescriptors;
+		// 计算LBP描述子，检测窗口移动步长(8,8)
+		// 实际上由于检测窗口和图像尺寸相等，不需要移动
+		LBP(src, LBPdescriptors);
+		descriptors.insert(descriptors.begin(), LBPdescriptors.begin(), LBPdescriptors.end());
+
+		Mat testFeatureMat = Mat::zeros(1, descriptors.size(), CV_32FC1);
 		//将计算好的HOG描述子复制到testFeatureMat矩阵中
 		memcpy(testFeatureMat.ptr<float>(0), descriptors.data(), descriptors.size() * 4);
 		// 用训练好的SVM分类器对测试图片的特征向量进行分类,返回类标
@@ -191,6 +209,14 @@ int main()
 		//计算HOG描述子，检测窗口移动步长(8,8)
 		hog.compute(src, descriptors, Size(8, 8));
 
+		// LBP描述子向量
+		vector<float> LBPdescriptors;
+		// 计算LBP描述子，检测窗口移动步长(8,8)
+		// 实际上由于检测窗口和图像尺寸相等，不需要移动
+		LBP(src, LBPdescriptors);
+		descriptors.insert(descriptors.begin(), LBPdescriptors.begin(), LBPdescriptors.end());
+
+		Mat testFeatureMat = Mat::zeros(1, descriptors.size(), CV_32FC1);
 		//将计算好的HOG描述子复制到testFeatureMat矩阵中
 		memcpy(testFeatureMat.ptr<float>(0), descriptors.data(), descriptors.size() * 4);
 		// 用训练好的SVM分类器对测试图片的特征向量进行分类,返回类标

@@ -16,7 +16,7 @@ public:
     }
 
     // 获得SVM的决策函数中的rho参数,即偏移量
-    float get_rho()
+    double get_rho()
     {
         return this->decision_func->rho;
     }

@@ -13,7 +13,7 @@ using namespace std;
 using namespace cv;
 
 // 原始负样本图片文件列表
-#define INRIANegativeImageList "INRIANegativeImageList.txt" 
+#define INRIANegativeImageList "TestExample_FromINRIA_NegList.txt" 
 
 int CropImageCount = 0; //裁剪出来的负样本图片个数
 
@@ -29,7 +29,7 @@ int main()
 	while (getline(fin, ImgName))
 	{
 		cout << "处理:"<< ImgName << endl;
-		ImgName = "../INRIAPerson/Train/neg/" + ImgName;
+		ImgName = "../INRIAPerson/" + ImgName;
 
 		src = imread(ImgName, 1);//读取图片
 
@@ -45,11 +45,11 @@ int main()
 				int y = (rand() % (src.rows - 128)); //左上角y坐标
 													 //cout<<x<<","<<y<<endl;
 				Mat imgROI = src(Rect(x, y, 64, 128));
-				sprintf(saveName, "../dataset/neg/noperson%06d.jpg", ++CropImageCount);//生成裁剪出的负样本图片的文件名
+				sprintf(saveName, "../dataset/test/neg/noperson%06d.jpg", ++CropImageCount);//生成裁剪出的负样本图片的文件名
 				imwrite(saveName, imgROI);//保存文件
 			}
 		}
 	}
 	cout << "总共裁剪出" << CropImageCount << "张图片" << endl;
-
+	system("pause");
 }
